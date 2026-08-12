@@ -43,3 +43,5 @@ next-env.d.ts
 # app database (SQLite, rebuilt on boot)
 /data/*.db
 /data/*.db-journal
+/data/*.db-wal
+/data/*.db-shm
