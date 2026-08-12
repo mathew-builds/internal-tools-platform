@@ -1,26 +1,19 @@
 @import "tailwindcss";
 
+/*
+ * The theme is owned by `app/layout.tsx`, in Tailwind utilities on <body>.
+ * Nothing here may set colours on `body`: an unlayered declaration beats
+ * Tailwind's `utilities` layer whatever its specificity, so a `body` background
+ * here would win over the layout's while content kept its dark text utilities.
+ *
+ * This is a light-theme-only app. `color-scheme: light` keeps form controls —
+ * the role switcher above all — light when the OS is in dark mode.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

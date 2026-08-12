@@ -6,7 +6,7 @@ import { getRefund } from "@/lib/refunds";
 import { userName } from "@/lib/users";
 import { approveRefundAction, rejectRefundAction } from "../actions";
 import { money, when } from "../_components/money";
-import { Refusal, Success } from "../_components/refusal";
+import { Refusal, StatusPill, Success } from "../_components/refusal";
 
 export const dynamic = "force-dynamic";
 
@@ -35,8 +35,8 @@ export default async function RefundPage({
       </Link>
 
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Refund <span className="font-mono text-base">{refund.id}</span>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Refund <span className="font-mono text-lg text-zinc-600">{refund.id}</span>
         </h1>
         <p className="mt-1 text-sm text-zinc-600">{refund.reason}</p>
       </div>
@@ -44,18 +44,20 @@ export default async function RefundPage({
       {rule && message ? <Refusal rule={rule} message={message} /> : null}
       {ok ? <Success message={ok} /> : null}
 
-      <dl className="grid grid-cols-2 gap-4 rounded-lg border border-zinc-200 bg-white p-4 text-sm sm:grid-cols-3">
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-5 rounded-lg border border-zinc-200 bg-white p-5 text-sm shadow-sm sm:grid-cols-3">
         <div>
           <dt className="text-xs uppercase tracking-wide text-zinc-500">Customer</dt>
           <dd className="mt-1">{refund.customer}</dd>
         </div>
         <div>
           <dt className="text-xs uppercase tracking-wide text-zinc-500">Amount</dt>
-          <dd className="mt-1">{money(refund.amount_cents, refund.currency)}</dd>
+          <dd className="mt-1 tabular-nums">{money(refund.amount_cents, refund.currency)}</dd>
         </div>
         <div>
           <dt className="text-xs uppercase tracking-wide text-zinc-500">Status</dt>
-          <dd className="mt-1">{refund.status}</dd>
+          <dd className="mt-1">
+            <StatusPill status={refund.status} />
+          </dd>
         </div>
         <div>
           <dt className="text-xs uppercase tracking-wide text-zinc-500">Requested by</dt>
@@ -86,18 +88,20 @@ export default async function RefundPage({
       </dl>
 
       {showDecisionControls ? (
-        <div className="space-y-3 rounded-lg border border-zinc-200 bg-white p-4">
-          <h2 className="text-sm font-semibold">Decide this refund</h2>
+        <div className="space-y-3 rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-500">
+            Decide this refund
+          </h2>
           <form action={approveRefundAction} className="flex flex-wrap items-center gap-3">
             <input type="hidden" name="id" value={refund.id} />
             <input
               name="note"
               placeholder="Note (optional)"
-              className="min-w-64 flex-1 rounded-md border border-zinc-300 px-2 py-1 text-sm"
+              className="min-w-64 flex-1 rounded-md border border-zinc-300 px-2.5 py-1.5 text-sm shadow-sm focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
             />
             <button
               type="submit"
-              className="rounded-md bg-emerald-700 px-3 py-1 text-sm font-medium text-white hover:bg-emerald-800"
+              className="cursor-pointer rounded-md bg-emerald-700 px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800"
             >
               Approve
             </button>
@@ -107,11 +111,11 @@ export default async function RefundPage({
             <input
               name="note"
               placeholder="Note (optional)"
-              className="min-w-64 flex-1 rounded-md border border-zinc-300 px-2 py-1 text-sm"
+              className="min-w-64 flex-1 rounded-md border border-zinc-300 px-2.5 py-1.5 text-sm shadow-sm focus:outline-2 focus:outline-offset-2 focus:outline-blue-600"
             />
             <button
               type="submit"
-              className="rounded-md bg-zinc-900 px-3 py-1 text-sm font-medium text-white hover:bg-zinc-700"
+              className="cursor-pointer rounded-md bg-zinc-900 px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-700"
             >
               Reject
             </button>
