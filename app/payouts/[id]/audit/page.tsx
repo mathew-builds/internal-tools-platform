@@ -51,8 +51,8 @@ export default async function PayoutAuditPage({
       </Link>
 
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">
-          Audit trail — <span className="font-mono text-base">{payout.id}</span>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Audit trail <span className="font-mono text-lg text-zinc-600">{payout.id}</span>
         </h1>
         <p className="mt-1 text-sm text-zinc-600">
           Append-only. UPDATE and DELETE on <span className="font-mono">audit_log</span> are refused
@@ -60,28 +60,32 @@ export default async function PayoutAuditPage({
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
-          <thead className="bg-zinc-50 text-left text-xs uppercase tracking-wide text-zinc-500">
+      <div className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
+        <table className="w-full table-auto text-sm">
+          <thead className="border-b border-zinc-200 bg-zinc-100 text-left text-xs font-semibold uppercase tracking-wide text-zinc-600">
             <tr>
-              <th className="px-4 py-2 font-medium">When</th>
-              <th className="px-4 py-2 font-medium">Actor</th>
-              <th className="px-4 py-2 font-medium">Action</th>
-              <th className="px-4 py-2 font-medium">Payload</th>
+              <th className="px-4 py-3">When</th>
+              <th className="px-4 py-3">Actor</th>
+              <th className="px-4 py-3">Action</th>
+              <th className="px-4 py-3">Payload</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id} className="border-t border-zinc-100 align-top">
-                <td className="px-4 py-2 whitespace-nowrap text-zinc-500">
+              <tr key={row.id} className="border-t border-zinc-100 align-top hover:bg-zinc-50">
+                <td className="px-4 py-3 font-mono text-xs whitespace-nowrap text-zinc-500">
                   {when(row.created_at)}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3 font-medium whitespace-nowrap">
                   {userName(row.actor)}{" "}
-                  <span className="font-mono text-xs text-zinc-500">({row.actor})</span>
+                  <span className="font-mono text-xs font-normal text-zinc-500">({row.actor})</span>
                 </td>
-                <td className="px-4 py-2 font-mono text-xs">{row.action}</td>
-                <td className="px-4 py-2 font-mono text-xs break-all text-zinc-600">
+                <td className="px-4 py-3">
+                  <span className="rounded bg-zinc-100 px-2 py-0.5 font-mono text-xs font-semibold text-zinc-800">
+                    {row.action}
+                  </span>
+                </td>
+                <td className="px-4 py-3 font-mono text-xs break-all text-zinc-600">
                   {row.payload ?? "—"}
                 </td>
               </tr>

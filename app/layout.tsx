@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Reviewable back-office queues sharing one governed foundation: auth, RBAC, an append-only audit log and maker-checker approval.",
 };
 
-export default async function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   const entries = nav.filter((entry) =>
     can(user, entry.requires.action, entry.requires.resource),
@@ -34,20 +34,23 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
+      <body className="min-h-full flex flex-col bg-zinc-50 font-sans text-zinc-900">
         <header className="border-b border-zinc-200 bg-white">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-6 py-3">
-            <div className="flex items-center gap-6">
-              <Link href="/refunds" className="text-sm font-semibold tracking-tight">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
+            <div className="flex flex-wrap items-center gap-6">
+              <Link
+                href="/refunds"
+                className="text-sm font-semibold tracking-tight text-zinc-900"
+              >
                 Internal tools
               </Link>
-              <nav className="flex items-center gap-4">
+              <nav className="flex items-center gap-1">
                 {entries.map((entry) => (
                   <Link
                     key={entry.href}
                     href={entry.href}
                     title={entry.description}
-                    className="text-sm text-zinc-600 hover:text-zinc-900"
+                    className="rounded-md px-2.5 py-1.5 text-sm font-medium text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
                   >
                     {entry.label}
                   </Link>
@@ -57,7 +60,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <RoleSwitcher user={user} next="/refunds" />
           </div>
         </header>
-        <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-8">{children}</main>
       </body>
     </html>
   );
