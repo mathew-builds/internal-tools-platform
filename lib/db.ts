@@ -13,6 +13,12 @@ function open(): DatabaseSync {
   const dataDir = path.join(process.cwd(), "data");
   fs.mkdirSync(dataDir, { recursive: true });
   const handle = new DatabaseSync(path.join(dataDir, "app.db"));
+  // First, before any statement that can contend: without a busy timeout SQLite
+  // fails a contended write immediately with "database is locked". More than one
+  // process opens this file — `node --test` runs each test file in its own
+  // process, and a dev server can be up at the same time — and each of them
+  // switches the journal mode, migrates and seeds on start.
+  handle.exec("PRAGMA busy_timeout = 5000");
   handle.exec("PRAGMA journal_mode = WAL");
   handle.exec("PRAGMA foreign_keys = ON");
   return handle;
@@ -47,7 +53,7 @@ function migrate(handle: DatabaseSync): void {
     if (applied.has(filename)) continue;
     handle.exec(fs.readFileSync(path.join(dir, filename), "utf8"));
     handle
-      .prepare("INSERT INTO _migrations (filename, applied_at) VALUES (?, ?)")
+      .prepare("INSERT OR IGNORE INTO _migrations (filename, applied_at) VALUES (?, ?)")
       .run(filename, new Date().toISOString());
   }
 }
@@ -65,7 +71,10 @@ let depth = 0;
 export function withTransaction<T>(fn: (tx: Tx) => T): T {
   if (depth > 0) return fn(db);
 
-  db.exec("BEGIN");
+  // IMMEDIATE takes the write lock up front. A deferred transaction that reads
+  // first and writes later cannot wait for a competing writer — the busy
+  // timeout does not apply once it holds a read snapshot — and fails instead.
+  db.exec("BEGIN IMMEDIATE");
   depth = 1;
   try {
     const result = fn(db);
