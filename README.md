@@ -25,6 +25,10 @@ npm run dev
 The database is created, migrated and seeded on first boot. There is no migrate step and no environment
 file.
 
+Tests run with `npm test`. The test files share a single SQLite database by design, so the runner is
+serialised deliberately with `--test-concurrency=1`; removing that flag reintroduces a cold-start
+`database is locked` race between test processes.
+
 ## Demo path
 
 The maker-checker rule is the point of this codebase, and it is invisible unless you go looking. Five
