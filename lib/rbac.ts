@@ -1,7 +1,7 @@
 import type { Role, User } from "./users.ts";
 
 export type Action = "read" | "request" | "approve" | "reject";
-export type Resource = "refund" | "audit";
+export type Resource = "refund" | "payout" | "audit";
 
 /**
  * Refusal raised when a role may not perform an action at all. Distinct from a
@@ -17,9 +17,18 @@ export class PermissionError extends Error {
 }
 
 const GRANTS: Record<Role, `${Resource}:${Action}`[]> = {
-  requester: ["refund:read", "refund:request"],
-  approver: ["refund:read", "refund:request", "refund:approve", "refund:reject"],
-  auditor: ["refund:read", "audit:read"],
+  requester: ["refund:read", "refund:request", "payout:read", "payout:request"],
+  approver: [
+    "refund:read",
+    "refund:request",
+    "refund:approve",
+    "refund:reject",
+    "payout:read",
+    "payout:request",
+    "payout:approve",
+    "payout:reject",
+  ],
+  auditor: ["refund:read", "payout:read", "audit:read"],
 };
 
 export function can(

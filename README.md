@@ -5,8 +5,9 @@ Authentication, role-based access control, an append-only audit log and maker-ch
 written once in `lib/`, and every queue consumes them. Adding a queue never means reimplementing any of
 them.
 
-[AT MINUTE 100-110, CONFIRM THIS IS STILL TRUE BEFORE LEAVING IT IN] Two queues are built. **Refunds:** [one line on what the refunds queue shows and does]. **Payout
-approvals:** [one line, written after the queue exists].
+Two queues are built. **Refunds:** customer refund requests, showing who requested each one, with
+approve and reject decided by a second person. **Payout approvals:** outgoing supplier payouts
+(recipient, amount, reference), filterable by status, on the same request-then-decide path.
 
 ## Requirements
 
@@ -23,6 +24,10 @@ npm run dev
 
 The database is created, migrated and seeded on first boot. There is no migrate step and no environment
 file.
+
+Tests run with `npm test`. The test files share a single SQLite database by design, so the runner is
+serialised deliberately with `--test-concurrency=1`; removing that flag reintroduces a cold-start
+`database is locked` race between test processes.
 
 ## Demo path
 

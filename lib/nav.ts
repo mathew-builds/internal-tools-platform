@@ -19,6 +19,12 @@ export const nav: NavEntry[] = [
     description: "Customer refund requests awaiting a second pair of eyes",
     requires: { action: "read", resource: "refund" },
   },
+  {
+    href: "/payouts",
+    label: "Payout approvals",
+    description: "Outgoing payouts awaiting a second pair of eyes",
+    requires: { action: "read", resource: "payout" },
+  },
 ];
 
 export default nav;
